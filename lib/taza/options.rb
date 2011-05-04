@@ -11,7 +11,7 @@ module Taza
 
     def add_choices(builder)
      builder.add_choice(:browser, :type=>:string, :default=>'firefox')
-     builder.add_choice(:driver, :type=>:string, :default=>'selenium')
+     builder.add_choice(:driver, :type=>:string, :default=>'watir_webdriver')
      builder.add_choice(:attach, :type=>:boolean, :default=>false)
      builder.add_choice(:timeout, :type=>:string)
      builder.add_choice(:server_ip, :type=>:string)
