@@ -1,10 +1,16 @@
 <%= "#Generated at #{Time.now}" %>
-$: << File.dirname(__FILE__)
-require 'rubygems'
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__)))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "lib"))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "lib/sites"))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "config"))
+require "rubygems"
+require "bundler/setup"
 require 'taza/tasks'
+require 'taza'
 
 Taza::Rake::Tasks.new do |t|
   file_hole = "artifacts/#{Time.now.to_i}"
   t.spec_opts = ["--format documentation --out output.txt"
   ]
 end
+

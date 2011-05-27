@@ -1,3 +1,4 @@
+require 'extensions/string'
 require 'taza/page'
 require 'taza/site'
 require 'taza/browser'
@@ -6,7 +7,6 @@ require 'taza/flow'
 require 'taza/entity'
 require 'taza/fixtures'
 require 'extensions/object'
-require 'extensions/string'
 require 'extensions/hash'
 require 'extensions/array'
 
