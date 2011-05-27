@@ -8,6 +8,11 @@ class String
       when :lower then ActiveSupport::Inflector.camelize(self, false)
     end
   end
+  
+  def underscore
+    ActiveSupport::Inflector.underscore(self)
+  end
+  
   # pluralizes a string and turns it into a symbol
   # Example:
   #  "apple".pluralize_to_sym    # => :apples
