@@ -13,6 +13,11 @@ class String
     ActiveSupport::Inflector.underscore(self)
   end
   
+  
+  def constantize
+    ActiveSupport::Inflector.constantize(self)
+  end
+  
   # pluralizes a string and turns it into a symbol
   # Example:
   #  "apple".pluralize_to_sym    # => :apples
