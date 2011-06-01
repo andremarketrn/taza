@@ -1,5 +1,6 @@
 require 'extensions/string'
 require 'taza/page'
+require 'taza/service'
 require 'taza/site'
 require 'taza/browser'
 require 'taza/settings'

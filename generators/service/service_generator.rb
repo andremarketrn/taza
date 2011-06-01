@@ -2,37 +2,39 @@ require 'rubygems'
 require 'rubigen'
 require 'active_support'
 
-class SiteGenerator < RubiGen::Base
+class ServiceGenerator < RubiGen::Base
   default_options :author => nil
-  attr_reader :name
+  attr_reader :site_name,:name
 
   def initialize(runtime_args, runtime_options = {})
     super
-    usage if args.empty?
+    usage if args.size != 2
     @name = args.shift
+    @site_name=args.shift
+    check_if_site_exists
     extract_options
+  end
+
+  def check_if_site_exists
+    unless File.directory?(File.join(destination_root,'lib','sites',site_name.underscore))
+      $stderr.puts "******No such site #{site_name} exists.******"
+      usage
+    end
   end
 
   def manifest
     record do |m|
-      site_path = File.join('lib','sites')
-      m.template "site.rb.erb", File.join(site_path,"#{name.underscore}.rb")
-      m.directory File.join(site_path,"#{name.underscore}")
-      m.directory File.join(site_path,("#{name.underscore}"),"flows")
-      m.directory File.join(site_path,("#{name.underscore}"),"pages")
-       m.directory File.join(site_path,("#{name.underscore}"),"services")
-      m.directory File.join(site_path,("#{name.underscore}"),"pages","partials")
-      m.directory File.join('spec','integration',name.underscore)
-      m.template "site.yml.erb", File.join('config',"#{name.underscore}.yml")
+      m.template "service.rb.erb", File.join('lib','sites', site_name.underscore, "services",  "#{name.underscore}_service.rb")
+      m.template "functional_service.rb.erb", File.join('spec','integration',site_name.underscore,"#{name.underscore}_service_spec.rb")
     end
   end
 
   protected
   def banner
     <<-EOS
-    Creates a taza site.
+    Creates a taza page for a given taza site, site you are making a page for must exist first.
 
-    USAGE: #{$0} #{spec.name} name
+    USAGE: #{$0} #{spec.name} page_name site_name
     EOS
   end
 
@@ -53,5 +55,4 @@ class SiteGenerator < RubiGen::Base
     # raw instance variable value.
     # @author = options[:author]
   end
-
 end

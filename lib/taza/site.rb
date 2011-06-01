@@ -54,6 +54,7 @@ module Taza
       @module_name = self.class.to_s.split("::").first
       @class_name  = self.class.to_s.split("::").last
       define_site_pages
+      define_services
       define_flows
       config = Settings.config(@class_name)
       if params[:browser]
@@ -108,6 +109,21 @@ module Taza
       end
     end
 
+    def define_services # :nodoc:
+      Dir.glob(services_path) do |file|
+        require file
+        service_name = File.basename(file,'.rb')
+        page_class = "#{@module_name}::#{service_name.camelize}"
+        self.class.class_eval <<-EOS
+        def #{service_name}(page_module = nil)
+          service = '#{service_name}'.constantize.new(page_module)
+          yield service if block_given?
+          service
+        end
+        EOS
+      end
+    end
+
     def define_flows # :nodoc:
       Dir.glob(flows_path) do |file|
         require file
@@ -133,6 +149,10 @@ module Taza
 
     def pages_path # :nodoc:
       File.join(path,'pages','**','*.rb')
+    end
+
+    def services_path # :nodoc:
+      File.join(path,'services','**','*.rb')
     end
 
     def flows_path # :nodoc:
