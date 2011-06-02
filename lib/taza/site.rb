@@ -115,8 +115,8 @@ module Taza
         service_name = File.basename(file,'.rb')
         page_class = "#{@module_name}::#{service_name.camelize}"
         self.class.class_eval <<-EOS
-        def #{service_name}(page_module = nil)
-          service = '#{service_name}'.constantize.new(page_module)
+        def #{service_name}()
+          service = '#{page_class}'.constantize.new()
           yield service if block_given?
           service
         end
