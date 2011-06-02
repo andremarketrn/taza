@@ -50,6 +50,12 @@ module Taza
     # Sites can take a couple of parameters in the constructor:
     #   :browser => a browser object to act on instead of creating one automatically
     #   :url => the url of where to start the site
+    #
+    # Pass :no_browser => true to not automatically invoke the browser
+    # for service tests for example
+    #  GoogleService.new(:no_browser => true) do |google_service|
+    #    google_service.blah
+    #  end
     def initialize(params={},&block)
       @module_name = self.class.to_s.split("::").first
       @class_name  = self.class.to_s.split("::").last
@@ -57,14 +63,18 @@ module Taza
       define_services
       define_flows
       config = Settings.config(@class_name)
-      if params[:browser]
-        @browser = params[:browser]
+      if params[:no_browser]
+        yield self
       else
-        @browser = Browser.create(config)
-        @i_created_browser = true
+        if params[:browser]
+          @browser = params[:browser]
+        else
+          @browser = Browser.create(config)
+          @i_created_browser = true
+        end
+        @browser.goto(params[:url] || config[:url])
+        execute_block_and_close_browser(browser,&block) if block_given?
       end
-      @browser.goto(params[:url] || config[:url])
-      execute_block_and_close_browser(browser,&block) if block_given?
     end
 
     def execute_block_and_close_browser(browser)
