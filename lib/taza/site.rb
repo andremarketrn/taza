@@ -64,7 +64,11 @@ module Taza
       define_flows
       config = Settings.config(@class_name)
       if params[:no_browser]
-        yield self
+        if block_given?
+          yield self
+        else
+          self
+        end
       else
         if params[:browser]
           @browser = params[:browser]
