@@ -59,10 +59,10 @@ module Taza
     def initialize(params={},&block)
       @module_name = self.class.to_s.split("::").first
       @class_name  = self.class.to_s.split("::").last
+      define_page_modules
       define_site_pages
       define_services
       define_flows
-      define_page_modules
       config = Settings.config(@class_name)
       if params[:no_browser]
         if block_given?
