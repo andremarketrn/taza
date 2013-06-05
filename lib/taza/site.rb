@@ -62,6 +62,7 @@ module Taza
       define_site_pages
       define_services
       define_flows
+      define_page_modules
       config = Settings.config(@class_name)
       if params[:no_browser]
         if block_given?
@@ -144,6 +145,13 @@ module Taza
       end
     end
 
+    def define_page_modules # :nodoc:
+      Dir.glob(page_modules_path) do |file|
+        require file
+      end
+    end
+
+
     # This is used to call a flow belonging to the site
     #
     # Example:
@@ -170,7 +178,11 @@ module Taza
     end
 
     def flows_path # :nodoc:
-      File.join(path,'flows','*.rb')
+      File.join(path, 'flows', '*.rb')
+    end
+
+    def page_modules_path # :nodoc:
+      File.join(path, 'modules', '*.rb')
     end
 
     def path # :nodoc:
